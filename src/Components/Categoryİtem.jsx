@@ -1,9 +1,10 @@
 import React from 'react'
 
 const Categoryİtem = ({ image, title, isActive, onClick }) => {
+
   return (
     <div 
-      onClick={onClick}
+      onClick={() => onClick(title)}
       className={`w-full cursor-pointer p-2 transition-all duration-300 relative group`}
     >
       <div className={`absolute inset-x-2 inset-y-1 rounded-xl transition-all duration-300 

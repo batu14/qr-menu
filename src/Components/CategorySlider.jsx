@@ -5,15 +5,17 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import Categoryİtem from "./Categoryİtem";
 import {categoriesData} from '../MockData/Datas'
+import { useDispatch } from 'react-redux'
+import { setCategories } from '../Reducers/CategoryReducer' 
 
 
 
 const CategorySlider = ({ onCategorySelect }) => {
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]?.id);
-
-  const handleCategoryClick = (categoryId) => {
+  const dispatch = useDispatch()
+  const handleCategoryClick = (categoryId,categoryTitle) => {
     setActiveCategory(categoryId);
-    onCategorySelect?.(categoryId);
+    dispatch(setCategories(categoryTitle))
   };
 
   return (
@@ -57,10 +59,11 @@ const CategorySlider = ({ onCategorySelect }) => {
               {categoriesData.map((category) => (
                 <SwiperSlide key={category.id} className="py-1">
                   <Categoryİtem
+
                     image={category.image}
                     title={category.title}
                     isActive={activeCategory === category.id}
-                    onClick={() => handleCategoryClick(category.id)}
+                    onClick={() => handleCategoryClick(category.id,category.title)}
                   />
                 </SwiperSlide>
               ))}
