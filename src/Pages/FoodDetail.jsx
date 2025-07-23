@@ -9,7 +9,7 @@ const FoodDetail = () => {
   const food = foods.find((food) => food.id === parseInt(id));
 
   return (
-    <div className="w-full h-full flex flex-col items-start justify-start">
+    <div className="w-full h-full  flex flex-col items-center justify-center">
       <div className="w-full h-full flex flex-col items-start justify-start">
         <Link to="/menu" className="w-full h-full flex  items-start justify-start p-6">
           <MdArrowBackIos className="w-6 h-6 text-gray-500" />
@@ -21,7 +21,7 @@ const FoodDetail = () => {
       <div className="w-full h-full flex flex-col items-start justify-start">
         <div className="bg-white rounded-xl overflow-hidden shadow-sm">
           {/* Resim */}
-          <div className="aspect-[4/3] sm:aspect-[16/9] overflow-hidden">
+          <div className="aspect-[4/3]  sm:aspect-[16/9] overflow-hidden">
             <img
               src={food.image}
               alt={food.title}

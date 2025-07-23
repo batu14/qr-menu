@@ -7,6 +7,7 @@ import Filter from "../Components/Filter";
 import { useSelector, useDispatch } from "react-redux";
 import { setView } from "../Reducers/DataReducer";
 import CompanyBanner from "../Components/CompanyBanner";
+import SidebarButton from "../Components/SidebarButton";
 import Sidebar from "../Components/Sidebar";
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -26,7 +27,8 @@ const Menu = () => {
   return (
     <div className="w-full relative h-full flex flex-col items-start justify-start">
       <CompanyBanner />
-      {/* <Sidebar /> */}
+      
+      <Sidebar />
       <CategorySlider />
       <Filter
         view={view}
