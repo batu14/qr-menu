@@ -6,6 +6,8 @@ import FoodCard from "../Components/FoodCard";
 import Filter from "../Components/Filter";
 import { useSelector, useDispatch } from "react-redux";
 import { setView } from "../Reducers/DataReducer";
+import CompanyBanner from "../Components/CompanyBanner";
+import Sidebar from "../Components/Sidebar";
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
   const [activeFilters, setActiveFilters] = useState(0);
@@ -22,7 +24,9 @@ const Menu = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-start justify-start">
+    <div className="w-full relative h-full flex flex-col items-start justify-start">
+      <CompanyBanner />
+      {/* <Sidebar /> */}
       <CategorySlider />
       <Filter
         view={view}
@@ -34,7 +38,7 @@ const Menu = () => {
       />
 
       <div className={
-        view == "grid" ? "w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6":
+        view == "grid" ? "w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4":
         "w-full h-full flex flex-col items-start justify-start space-y-4"
       }>
         {foods.map((food) => (
@@ -48,6 +52,7 @@ const Menu = () => {
               description={food.description}
               price={food.price}
               ingredients={food.ingredients}
+              id={food.id}
             />
           </div>
         ))}

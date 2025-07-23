@@ -1,11 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
-const FoodCard = ({ image, title, description, price, ingredients }) => {
+import { Link } from "react-router";
+const FoodCard = ({ image, title, description, price, ingredients, id }) => {
   const view = useSelector((state) => state.view.view);
 
   if (view === "list") {
     return (
-      <div className="bg-white w-full rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group">
+      <Link to={`/menu/${id}`} className="bg-white w-full rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group">
         <div className="flex gap-4 p-4">
           {/* Resim */}
           <div className="flex-shrink-0">
@@ -64,12 +65,12 @@ const FoodCard = ({ image, title, description, price, ingredients }) => {
             )}
           </div>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div className="bg-white w-full h-full rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+    <Link to={`/menu/${id}`} className="bg-white w-full h-full rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
       {/* Resim Alanı */}
       <div className="aspect-[4/3] overflow-hidden relative">
         <img
@@ -111,7 +112,7 @@ const FoodCard = ({ image, title, description, price, ingredients }) => {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 
