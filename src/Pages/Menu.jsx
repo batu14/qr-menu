@@ -10,14 +10,14 @@ import CompanyBanner from "../Components/CompanyBanner";
 import Sidebar from "../Components/Sidebar";
 import { useEffect } from "react";
 import { setCategories } from "../Reducers/CategoryReducer";
-
+import { setSearchValue } from "../Reducers/FilterReducer";
 const Menu = () => {
-  const [searchValue, setSearchValue] = useState("");
+  
   const [activeFilters, setActiveFilters] = useState(0);
   const dispatch = useDispatch();
   const view = useSelector((state) => state.view.view);
   const categories = useSelector((state) => state.category.categories);
-
+  const searchValue = useSelector((state) => state.filter.searchValue);
 
   const [filteredFoods, setFilteredFoods] = useState(foods);
 
@@ -26,7 +26,7 @@ const Menu = () => {
     dispatch(setView(newView));
   };
   const handleSearch = (value) => {
-    setSearchValue(value);
+    dispatch(setSearchValue(value));
   };
   const handleFilterClick = () => {
     setActiveFilters(activeFilters + 1);
@@ -37,6 +37,10 @@ const Menu = () => {
       setFilteredFoods(foods.filter((food) => food.category !== categories));
     }
   }, [categories]);
+
+  useEffect(() => {
+    setFilteredFoods(foods.filter((food) => food.title.toLowerCase().includes(searchValue.toLowerCase())));
+  }, [searchValue]);
 
   return (
     <div className="w-full relative h-full flex flex-col items-start justify-start">

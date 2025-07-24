@@ -18,13 +18,13 @@ const CompanyBanner = () => {
       </div>
 
       {/* Sağ Bilgiler */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2">
+      {/* <div className="absolute right-4 top-1/2 -translate-y-1/2">
         <div className="flex items-center gap-1 text-sm text-gray-500">
           <span>4.8</span>
           <span>★</span>
           <span className="text-gray-400">(250+)</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -18,7 +18,6 @@ const Home = () => {
           <h1 className="text-4xl font-bold text-gray-900 leading-tight">
             Lezzet Durağı
           </h1>
-          
         </div>
 
         {/* Menü Butonu */}
@@ -37,7 +36,6 @@ const Home = () => {
             📍 Merkez Mahallesi, Lezzet Sokak No:1
           </p>
           <p className="text-sm text-gray-500">📞 (555) 123-4567</p>
-          <p className="text-sm text-gray-500">🕒 Her gün 09:00 - 23:00</p>
         </div>
       </div>
     </div>

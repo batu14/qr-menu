@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { HiViewGrid, HiViewList } from "react-icons/hi";
 import { FiSearch } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";  
+import { setSearchValue } from "../Reducers/FilterReducer";
 
-const Filter = ({ view, onViewChange, onSearch, searchValue = "" }) => {
+const Filter = ({ view, onViewChange, onSearch }) => {
+
+  const [search, setSearch] = useState("")
+  const dispatch = useDispatch()
+
+  const handleSearch = (value) => {
+    dispatch(setSearchValue(value))
+    setSearch(value)
+  }
   return (
     <div className="w-full bg-white border-b sticky top-0 z-20">
       <div className="w-full mx-auto px-4 py-3">
@@ -12,8 +22,8 @@ const Filter = ({ view, onViewChange, onSearch, searchValue = "" }) => {
             <input
               type="text"
               placeholder="Yemek ara..."
-              value={searchValue}
-              onChange={(e) => onSearch(e.target.value)}
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
               className="w-full  pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-transparent"
             />
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
