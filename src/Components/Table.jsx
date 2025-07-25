@@ -4,6 +4,8 @@ import Button from "./Button";
 import { TbEdit, TbTrash } from "react-icons/tb";
 
 const Table = ({
+  deleteAction,
+  editAction,
   data,
   column,
   className,
@@ -77,10 +79,10 @@ const Table = ({
                   ))}
                 <td className={tdStyles}>
                   <div className="flex space-x-2">
-                    <Button variant="danger" size="sm">
+                    <Button variant="danger" size="sm" onClick={() => deleteAction(row)}>
                       <TbTrash className="mr-1" /> Sil
                     </Button>
-                    <Button variant="primary" size="sm">
+                    <Button variant="primary" size="sm" onClick={() => editAction(row)}>
                       <TbEdit className="mr-1" /> Düzenle
                     </Button>
                   </div>
@@ -124,10 +126,10 @@ const Table = ({
                 </div>
               ))}
             <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
-              <Button variant="danger" size="sm">
+              <Button variant="danger" size="sm" onClick={() => deleteAction(row)}>
                 <TbTrash className="mr-1" /> Sil
               </Button>
-              <Button variant="primary" size="sm">
+              <Button variant="primary" size="sm" onClick={() => editAction(row)}>
                 <TbEdit className="mr-1" /> Düzenle
               </Button>
             </div>

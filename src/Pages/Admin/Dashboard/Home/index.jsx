@@ -31,7 +31,7 @@ const index = () => {
   };
   return (
     <div className="w-full flex-col h-full flex items-start justify-start gap-4">
-      <div className="w-full flex flex-col items-start justify-start  gap-2 border-b border-gray-400 pb-4">
+      <div className="w-full flex flex-col items-start justify-start  gap-2 border-b border-gray-400 p-4">
         <h1 className="text-2xl md:hidden font-bold">
           {activeTab
             ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1)
@@ -39,7 +39,9 @@ const index = () => {
         </h1>
         <Tab tabs={tabs} />
       </div>
+      <div className="w-full flex items-start justify-start p-4">
       {content[activeTab]}
+      </div>
     </div>
   );
 };

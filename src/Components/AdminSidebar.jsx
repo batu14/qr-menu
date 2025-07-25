@@ -23,7 +23,7 @@ const AdminSidebar = () => {
   const menuItems = [
     { name: 'Karşılama', icon: HiOutlineHome, path: '/dashboard/home' },
     { name: 'Kategoriler', icon: HiOutlineViewGrid, path: '/dashboard/category' },
-    { name: 'Ürünler', icon: HiOutlineShoppingCart, path: '/admin/products' },
+    { name: 'Ürünler', icon: HiOutlineShoppingCart, path: '/dashboard/product' },
   ];
 
   const settingsItems = [

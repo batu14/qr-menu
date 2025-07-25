@@ -1,28 +1,27 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 const Modal = ({ children, isOpen = false, setIsOpen }) => {
-  const toggleHandel = (e) => {
-    if (e.target.classList.contains("modal-container")) {
+  if (!isOpen) return null;
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
       setIsOpen(false);
-    } else {
-      e.stopPropagation();
     }
   };
-  if (isOpen) {
-    return (
-      <div
-        onClick={(e) => {
-          toggleHandel(e);
-        }}
-        className={`fixed inset-0 p-4 md:p-0 modal-container bg-black/50 bg-opacity-50 flex justify-center items-center top-0 left-0 z-50 ${
-          isOpen ? "block" : "hidden"
-        }`}
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+      onClick={handleBackdropClick}
+    >
+      <div 
+        className="relative w-full max-w-2xl"
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default Modal;

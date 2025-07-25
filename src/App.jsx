@@ -9,6 +9,7 @@ import Dashboard from "./Pages/Admin/Dashboard";
 import NotFound from "./Pages/NotFound";
 import HomeAdmin from "./Pages/Admin/Dashboard/Home";
 import CategoryAdmin from "./Pages/Admin/Dashboard/Category";
+import ProductAdmin from "./Pages/Admin/Dashboard/Product";
 const App = () => {
   return (
     <BrowserRouter>
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="/dashboard/home" element={<HomeAdmin />} />
           <Route path="/dashboard/category" element={<CategoryAdmin />} />
+          <Route path="/dashboard/product" element={<ProductAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>
