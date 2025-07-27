@@ -16,6 +16,7 @@ import { CiImageOn } from "react-icons/ci";
 import { IoFastFood } from "react-icons/io5";
 import { GiForkKnifeSpoon } from "react-icons/gi";
 import { MdOutlineDangerous } from "react-icons/md";
+import LangSelector from "../../../../Components/LangSelector";
 
 const ProductPage = () => {
   const dispatch = useDispatch();
@@ -199,6 +200,8 @@ const ProductPage = () => {
           </div>
         </div>
       </Modal>
+
+      <LangSelector />
 
       <div className="w-full flex items-center justify-between">
         <h1 className="text-2xl hidden md:block font-bold">Ürünler</h1>

@@ -7,6 +7,7 @@ import Modal from "../../../../Components/Modal";
 import CategoryAddModal from "../../../../Modals/CategoryAddModal";
 import { useDispatch } from "react-redux";
 import { setCategoryId } from "../../../../Reducers/CategoryReducer";
+import LangSelector from "../../../../Components/LangSelector";
 const index = () => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +15,6 @@ const index = () => {
     { header: "id", render: (row) => row.id },
     { header: "title", render: (row) => row.title },
     { header: "image", render: (row) => row.image },
-    
   ];
 
   const deleteAction = (row) => {
@@ -30,6 +30,9 @@ const index = () => {
       <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
         <CategoryAddModal setIsOpen={setIsModalOpen} />
       </Modal>
+      <div className="w-full flex items-center justify-end">
+        <LangSelector />
+      </div>
       <div className="w-full flex items-center justify-between">
         <h1 className="text-2xl hidden md:block font-bold">Kategoriler</h1>
         <Button onClick={() => setIsModalOpen(true)}>
@@ -37,7 +40,12 @@ const index = () => {
           <span>Kategori Ekle</span>
         </Button>
       </div>
-      <Table data={categoriesData} column={columns} deleteAction={deleteAction} editAction={editAction} />
+      <Table
+        data={categoriesData}
+        column={columns}
+        deleteAction={deleteAction}
+        editAction={editAction}
+      />
     </div>
   );
 };

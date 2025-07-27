@@ -1,34 +1,34 @@
 import React, { useEffect } from "react";
 import Tab from "../../../../Components/Tab";
 import { useSelector, useDispatch } from "react-redux";
-import Content from "./Tabs/Content";
-import { MdOutlineTextSnippet } from "react-icons/md";
-import { CiImageOn } from "react-icons/ci";
-import Logo from "./Tabs/Logo";
 import { setActiveTab } from "../../../../Reducers/TabReducer";
 import LangSelector from "../../../../Components/LangSelector";
+import { FaWifi } from "react-icons/fa";
+import { FaLanguage } from "react-icons/fa";
+import Wifi from "./Tabs/Wifi";
+import ReviewTranslate from "./Tabs/ReviewTranslate";
 
 const index = () => {
   const activeTab = useSelector((state) => state.tab.activeTab);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setActiveTab("İçerik Alanı"));
+    dispatch(setActiveTab("Kablosuz Ağ"));
   }, []);
   const tabs = [
     {
-      name: "İçerik Alanı",
-      icon: MdOutlineTextSnippet,
+      name: "Kablosuz Ağ",
+      icon: FaWifi,
     },
     {
-      name: "Logo",
-      icon: CiImageOn,
+      name: "Değerlendirme çevirileri",
+      icon: FaLanguage,
     },
   ];
 
   const content = {
-    "İçerik Alanı": <Content />,
-    Logo: <Logo />,
+    "Kablosuz Ağ": <Wifi />,
+    "Değerlendirme çevirileri": <ReviewTranslate />,
   };
   return (
     <div className="w-full flex-col h-full flex items-start justify-start gap-4">
@@ -39,7 +39,7 @@ const index = () => {
         <h1 className="text-2xl md:hidden font-bold">
           {activeTab
             ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1)
-            : "İçerik Alanı"}
+            : "Genel Ayarlar"}
         </h1>
         <Tab tabs={tabs} />
       </div>

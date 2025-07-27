@@ -10,6 +10,9 @@ import NotFound from "./Pages/NotFound";
 import HomeAdmin from "./Pages/Admin/Dashboard/Home";
 import CategoryAdmin from "./Pages/Admin/Dashboard/Category";
 import ProductAdmin from "./Pages/Admin/Dashboard/Product";
+import GeneralAdmin from "./Pages/Admin/Dashboard/Settings/General";
+import SocialAdmin from "./Pages/Admin/Dashboard/Settings/Social";
+import LanguageAdmin from "./Pages/Admin/Dashboard/Settings/Language";
 const App = () => {
   return (
     <BrowserRouter>
@@ -20,12 +23,15 @@ const App = () => {
         <Route path="/review" element={<Rewiev />} />
       </Routes>
       <Routes>
-        <Route path="*" element={<NotFound />} />
+        
         <Route path="/admin" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="/dashboard/home" element={<HomeAdmin />} />
           <Route path="/dashboard/category" element={<CategoryAdmin />} />
           <Route path="/dashboard/product" element={<ProductAdmin />} />
+          <Route path="/dashboard/general" element={<GeneralAdmin />} />
+          <Route path="/dashboard/social" element={<SocialAdmin />} />
+          <Route path="/dashboard/language" element={<LanguageAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>

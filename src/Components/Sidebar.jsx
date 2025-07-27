@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { HiOutlineMenu, HiOutlineStar, HiOutlineWifi, HiChevronDown } from "react-icons/hi"
 import { IoCloseOutline } from "react-icons/io5"
 import { HiOutlineLanguage } from "react-icons/hi2";
-import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaTwitter, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from 'react-router'
 
 const Sidebar = () => {
@@ -99,6 +99,11 @@ const Sidebar = () => {
               <span className="text-xs font-medium text-gray-500">{copied ? 'Kopyalandı!' : 'Kopyala'}</span>
             </button>
           </div>
+          <Link to="/review" className={sectionHeaderClasses + " py-4"}>
+            <HiOutlineStar className={commonIconClasses} />
+            <span className="font-medium">Bizi değerlendirin</span>
+
+          </Link>
 
           <div>
             <div className={sectionHeaderClasses}>
