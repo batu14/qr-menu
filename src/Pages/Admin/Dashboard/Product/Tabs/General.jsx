@@ -1,8 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputComp from "../../../../../Components/InputComp";
 import TextAreaCom from "../../../../../Components/TextAreaCom";
-import { categoriesData } from "../../../../../MockData/Datas";
+import { useSelector } from "react-redux";
 const General = ({ product, setProduct }) => {
+
+  const adminLang = useSelector((state) => state.adminLang.lang);
+
+
+  useEffect(() => {
+    const formData = new FormData();
+    formData.append("action", "get_categories");
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("langCode", adminLang);
+    fetch(`${import.meta.env.VITE_API_URL}Api/Category.php`, {
+      method: "POST",
+      body: formData,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.status == 200){
+        setCategories(data.data);
+      }
+    })
+  }, []);
+
+  const [categories, setCategories] = useState([]);
 
 
   return (
@@ -23,7 +45,8 @@ const General = ({ product, setProduct }) => {
       />
 
       <select className="w-full border border-gray-300 p-2 rounded-md" onChange={(e)=>setProduct((prev)=>({...prev,categoryId:e.target.value}))}>
-        {categoriesData.map((category)=>(
+        <option value="">Kategori seçiniz</option>
+        {categories.map((category)=>(
           <option key={category.id} value={category.id}>{category.title}</option>
         ))}
       </select>

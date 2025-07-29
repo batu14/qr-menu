@@ -1,15 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../../../Components/Button";
 import { FaPlus } from "react-icons/fa";
-import { categoriesData } from "../../../../MockData/Datas";
 import Table from "../../../../Components/Table";
 import Modal from "../../../../Components/Modal";
 import CategoryAddModal from "../../../../Modals/CategoryAddModal";
-import { useDispatch } from "react-redux";
-import { setCategoryId } from "../../../../Reducers/CategoryReducer";
 import LangSelector from "../../../../Components/LangSelector";
+import { toast, Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
+
 const index = () => {
-  const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const langCode = useSelector((state) => state.adminLang.lang);
+
+
+  const getCategories = () => {
+    const formData = new FormData();
+    formData.append("action", "get_categories");
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("langCode", localStorage.getItem("adminLang"));
+    fetch(`${import.meta.env.VITE_API_URL}Api/Category.php`, {
+      method: "POST",
+      body: formData,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        setCategories(data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+  useEffect(() => {
+    getCategories();
+  }, [langCode]);
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const columns = [
     { header: "id", render: (row) => row.id },
@@ -18,17 +45,46 @@ const index = () => {
   ];
 
   const deleteAction = (row) => {
-    console.log(row);
+    const formData = new FormData();
+    formData.append("action", "delete_category");
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("id", row.id);
+    fetch(`${import.meta.env.VITE_API_URL}Api/Category.php`, {
+      method: "POST",
+      body: formData,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.status == 200){
+        toast.success(data.message);
+        setCategories(categories.filter((category) => category.id !== row.id));
+      }else{
+        toast.error(data.message);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 
   const editAction = (row) => {
+    setSelectedCategory(row);
     setIsModalOpen(true);
-    dispatch(setCategoryId(row.id));
   };
   return (
     <div className="w-full flex flex-col items-start justify-start gap-4 p-4">
+      <Toaster />
       <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-        <CategoryAddModal setIsOpen={setIsModalOpen} />
+        <CategoryAddModal
+          getCategories={getCategories}
+          data={{
+            title: selectedCategory?.title,
+            image: selectedCategory?.image,
+            id: selectedCategory?.id,
+            preview : null
+          } || []}
+          setIsOpen={setIsModalOpen}
+        />
       </Modal>
       <div className="w-full flex items-center justify-end">
         <LangSelector />
@@ -41,7 +97,7 @@ const index = () => {
         </Button>
       </div>
       <Table
-        data={categoriesData}
+        data={categories}
         column={columns}
         deleteAction={deleteAction}
         editAction={editAction}

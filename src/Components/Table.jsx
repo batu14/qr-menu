@@ -34,19 +34,75 @@ const Table = ({
     compact ? "py-2" : "py-3"
   );
 
-  const tdStyles = classNames("px-6 ", compact ? "py-2" : "py-4");
+  const tdStyles = classNames("px-6", compact ? "py-2" : "py-4");
 
   const trStyles = classNames(
     hover && "hover:bg-gray-50 transition-colors duration-200"
   );
 
-  // Render fonksiyonu - içeriği uygun şekilde render eder
   const renderCellContent = (col, row) => {
     const content = col.render(row);
-    const contentString = content.toString();
+    const contentString = content?.toString() || "";
     const isLink = linkHeaders.includes(col.header);
-    
-    // Eğer bu header linkHeaders array'inde varsa, link olarak render et
+
+    const isImage = () => {
+      if (!contentString) return false;
+
+      const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
+      if (imageExtensions.some(ext => contentString.toLowerCase().includes(ext))) return true;
+
+      const imageServices = [
+        'localhost',
+        'images.unsplash.com',
+        'cdn.pixabay.com',
+        'images.pexels.com',
+        'i.imgur.com',
+        'media.getty',
+        'cloudinary.com',
+        'amazonaws.com',
+        'googleusercontent.com',
+        'fbcdn.net',
+        'cdninstagram.com'
+      ];
+      if (imageServices.some(service => contentString.includes(service))) return true;
+
+      const urlParams = new URLSearchParams(contentString.split('?')[1] || '');
+      return urlParams.has('format') || urlParams.has('fit') || urlParams.has('crop') || urlParams.has('w') || urlParams.has('h');
+    };
+
+    if (isImage()) {
+      const imageUrl = contentString.startsWith("uploads")
+        ? import.meta.env.VITE_API_URL + "Api/" + contentString
+        : contentString;
+
+      return (
+        <div className="relative">
+          <img 
+            src={imageUrl} 
+            alt={col.header} 
+            className="w-24 h-24 object-cover rounded"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextElementSibling.style.display = 'block';
+            }}
+          />
+          <div 
+            className="hidden text-xs text-gray-500 break-all"
+            style={{ display: 'none' }}
+          >
+            <a 
+              href={imageUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              Resim yüklenemedi - Linke git
+            </a>
+          </div>
+        </div>
+      );
+    }
+
     if (isLink && contentString) {
       return (
         <a 
@@ -59,80 +115,13 @@ const Table = ({
         </a>
       );
     }
-    
-    // Resim kontrolü - daha kapsamlı resim tespiti
-    const isImage = () => {
-      if (!contentString.includes("http")) return false;
-      
-      // Klasik resim uzantıları
-      const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
-      if (imageExtensions.some(ext => contentString.toLowerCase().includes(ext))) {
-        return true;
-      }
-      
-      // Popüler resim servisleri
-      const imageServices = [
-        'images.unsplash.com',
-        'cdn.pixabay.com',
-        'images.pexels.com',
-        'i.imgur.com',
-        'media.getty',
-        'cloudinary.com',
-        'amazonaws.com',
-        'googleusercontent.com',
-        'fbcdn.net',
-        'cdninstagram.com'
-      ];
-      
-      if (imageServices.some(service => contentString.includes(service))) {
-        return true;
-      }
-      
-      // Query parametrelerinde resim format kontrolü
-      const urlParams = new URLSearchParams(contentString.split('?')[1] || '');
-      if (urlParams.has('format') || urlParams.has('fit') || urlParams.has('crop') || urlParams.has('w') || urlParams.has('h')) {
-        return true;
-      }
-      
-      return false;
-    };
-    
-    if (isImage()) {
-      return (
-        <div className="relative">
-          <img 
-            src={contentString} 
-            alt={col.header} 
-            className="w-24 h-24 object-cover rounded"
-            onError={(e) => {
-              // Resim yüklenemezse fallback göster
-              e.target.style.display = 'none';
-              e.target.nextElementSibling.style.display = 'block';
-            }}
-          />
-          <div 
-            className="hidden text-xs text-gray-500 break-all"
-            style={{ display: 'none' }}
-          >
-            <a 
-              href={contentString} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline"
-            >
-              Resim yüklenemedi - Linke git
-            </a>
-          </div>
-        </div>
-      );
-    }
-    
+
     return content;
   };
 
   return (
     <>
-      {/* Desktop View */}
+      {/* Masaüstü görünüm */}
       <div className="hidden md:block overflow-x-auto rounded-lg shadow w-full">
         <table className={tableStyles}>
           <thead className="bg-gray-50">
@@ -179,7 +168,7 @@ const Table = ({
         </table>
       </div>
 
-      {/* Mobile View */}
+      {/* Mobil görünüm */}
       <div className="md:hidden space-y-4 w-full">
         {data.map((row, rowIndex) => (
           <div

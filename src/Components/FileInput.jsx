@@ -1,177 +1,93 @@
-import React, { useRef, useState } from "react";
-import classNames from "classnames";
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import { MdCloudUpload, MdDelete } from "react-icons/md";
 
 const FileInput = ({
-  label,
-  accept,
-  multiple = false,
-  maxSize = 5, // MB cinsinden
-  error,
-  helperText,
-  onChange,
-  required = false,
-  className,
-  ...props
+ logo,
+ setLogo,
+ preview,
+ setPreview,
+ data,
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [preview, setPreview] = useState(null);
-  const inputRef = useRef(null);
+ 
 
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setLogo(file);
+    setPreview(URL.createObjectURL(file));
   };
 
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
+ 
+
+  const handleRemove = () => {
+    setLogo(null);
+    setPreview(null);
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const files = e.dataTransfer.files;
-    handleFiles(files);
-  };
-
-  const handleFiles = (files) => {
-    if (!files.length) return;
-
-    const file = files[0];
-    // Dosya boyutu kontrolü (MB cinsinden)
-    if (file.size > maxSize * 1024 * 1024) {
-      setPreview(null);
-      if (onChange) {
-        onChange({ error: `Dosya boyutu ${maxSize}MB'dan küçük olmalıdır` });
-      }
-      return;
+  useEffect(() => {
+    if (data && data.image) {
+      setPreview(import.meta.env.VITE_API_URL+"Api/" + data.image);
     }
+  }, [data]);
 
-    // Önizleme oluşturma (resim dosyaları için)
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreview(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreview(null);
-    }
-
-    if (onChange) {
-      onChange(file);
-    }
-  };
-
-  const handleClick = () => {
-    inputRef.current?.click();
-  };
-
-  const handleChange = (e) => {
-    handleFiles(e.target.files);
-  };
-
-  const baseStyles =
-    "w-full border-2 border-dashed rounded-lg p-6 transition-colors duration-200";
-  const getStateStyles = () => {
-    if (error) return "border-red-500 bg-red-50";
-    if (isDragging) return "border-blue-500 bg-blue-50";
-    return "border-gray-300 hover:border-blue-400 bg-gray-50";
-  };
 
   return (
-    <div className="w-full">
-      {label && (
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
-          {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+    <div className="w-full flex flex-col items-center gap-6">
+        <label
+          htmlFor="file"
+          className="relative w-full border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all duration-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 overflow-hidden"
+        >
+          <div className="p-8 flex flex-col items-center justify-center min-h-[300px]">
+            {preview && preview != "" && preview != null && preview != "null" ? (
+              <div className="flex flex-col items-center gap-6 relative group">
+                <img
+                  src={preview}
+                  alt="Logo önizleme"
+                  className="w-full md:w-1/2 aspect-square rounded-lg object-cover shadow-lg transition-transform group-hover:scale-95"
+                />
+                <div className="absolute inset-0 bg-black/50 bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                  <MdCloudUpload className="text-4xl text-white" />
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRemove();
+                  }}
+                  className="absolute -top-2 -right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                >
+                  <MdDelete className="text-xl" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-4 py-8">
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center">
+                  <MdCloudUpload className="text-4xl text-blue-500" />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-xl font-medium text-gray-700">
+                    Logo Yükle
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-2">
+                    PNG, JPG veya JPEG (maksimum 2MB)
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Önerilen boyut: 512x512px
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </label>
-      )}
 
-      <div
-        className={classNames(baseStyles, getStateStyles(), className)}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-      >
         <input
           type="file"
-          ref={inputRef}
+          id="file"
           className="hidden"
-          accept={accept}
-          multiple={multiple}
-          onChange={(e) => {
-              onChange(e),
-              setPreview(e.target.files[0])
-          }}
-          {...props}
+          onChange={handleFileChange}
+          accept="image/*"
         />
-
-        <div className="text-center">
-          {preview ? (
-            <div className="mb-4">
-              <img
-                src={URL.createObjectURL(preview)}
-                alt="Önizleme"
-                className="mx-auto max-h-48 rounded-lg object-contain"
-              />
-            </div>
-          ) : (
-            <div className="mb-4">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-                <path
-                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          )}
-
-          <div className="text-sm text-gray-600">
-            <span className="font-medium text-blue-600 hover:text-blue-500">
-              Dosya yüklemek için tıklayın
-            </span>{" "}
-            veya sürükleyip bırakın
-          </div>
-          <p className="mt-1 text-xs text-gray-500">
-            {accept
-              ? `Desteklenen formatlar: ${accept}`
-              : "Tüm dosya formatları desteklenir"}
-          </p>
-          <p className="text-xs text-gray-500">
-            Maksimum dosya boyutu: {maxSize}MB
-          </p>
-        </div>
       </div>
-
-      {(error || helperText) && (
-        <p
-          className={classNames(
-            "mt-1.5 text-sm",
-            error ? "text-red-500" : "text-gray-500"
-          )}
-        >
-          {error || helperText}
-        </p>
-      )}
-    </div>
   );
 };
+
 
 export default FileInput;

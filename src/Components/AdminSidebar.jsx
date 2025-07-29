@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   HiOutlineHome,
   HiOutlineViewGrid,
@@ -12,14 +12,25 @@ import {
   HiOutlineChevronDown,
   HiOutlineGlobe,
   HiOutlineSun,
-  HiOutlineShare
-} from 'react-icons/hi';
+  HiOutlineShare,
+} from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "../Reducers/AuthReducer";
 
 const AdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      dispatch(clearUser());
+      navigate("/admin");
+    }
+  }, [token]);
 
   // Ekran boyutunu kontrol et
   useEffect(() => {
@@ -31,36 +42,44 @@ const AdminSidebar = () => {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const menuItems = [
-    { name: 'Karşılama', icon: HiOutlineHome, path: '/dashboard/home' },
-    { name: 'Kategoriler', icon: HiOutlineViewGrid, path: '/dashboard/category' },
-    { name: 'Ürünler', icon: HiOutlineShoppingCart, path: '/dashboard/product' },
+    { name: "Karşılama", icon: HiOutlineHome, path: "/dashboard/home" },
+    {
+      name: "Kategoriler",
+      icon: HiOutlineViewGrid,
+      path: "/dashboard/category",
+    },
+    {
+      name: "Ürünler",
+      icon: HiOutlineShoppingCart,
+      path: "/dashboard/product",
+    },
   ];
 
   const settingsItems = [
-    { name: 'Genel Ayarlar', icon: HiOutlineCog, path: '/dashboard/general', },
-    { name: 'Sosyal Medya', icon: HiOutlineShare, path: '/dashboard/social' },
-    { name: 'Dil Ayarları', icon: HiOutlineGlobe, path: '/dashboard/language' },
-    { name: 'Tema & Renkler', icon: HiOutlineSun, path: '/dashboard/theme' },
+    { name: "Genel Ayarlar", icon: HiOutlineCog, path: "/dashboard/general" },
+    { name: "Sosyal Medya", icon: HiOutlineShare, path: "/dashboard/social" },
+    { name: "Dil Ayarları", icon: HiOutlineGlobe, path: "/dashboard/language" },
+    { name: "Tema & Renkler", icon: HiOutlineSun, path: "/dashboard/theme" },
   ];
 
   const handleLogout = () => {
-    // Logout işlemleri burada yapılacak
-    console.log('Çıkış yapılıyor...');
+    dispatch(clearUser());
+    navigate("/admin");
   };
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
     if (isMobile) {
-      document.body.style.overflow = isCollapsed ? 'hidden' : 'auto';
+      document.body.style.overflow = isCollapsed ? "hidden" : "auto";
     }
   };
 
-  const isSettingsPage = location.pathname.includes('/admin/settings');
+  const isSettingsPage = location.pathname.includes("/admin/settings");
 
   return (
     <>
@@ -87,7 +106,11 @@ const AdminSidebar = () => {
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 transition-all duration-300 z-40
-          ${isCollapsed ? '-translate-x-full md:translate-x-0 md:w-20' : 'translate-x-0 w-64'}
+          ${
+            isCollapsed
+              ? "-translate-x-full md:translate-x-0 md:w-20"
+              : "translate-x-0 w-64"
+          }
         `}
       >
         {/* Header */}
@@ -122,13 +145,17 @@ const AdminSidebar = () => {
               onClick={() => isMobile && toggleSidebar()}
               className={`flex items-center gap-2 p-3 rounded-lg transition-colors ${
                 location.pathname === item.path
-                  ? 'bg-gray-900 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              <item.icon className={`w-5 h-5 ${
-                location.pathname === item.path ? 'text-white' : 'text-gray-400'
-              }`} />
+              <item.icon
+                className={`w-5 h-5 ${
+                  location.pathname === item.path
+                    ? "text-white"
+                    : "text-gray-400"
+                }`}
+              />
               {!isCollapsed && <span className="font-medium">{item.name}</span>}
             </Link>
           ))}
@@ -139,14 +166,24 @@ const AdminSidebar = () => {
               <button
                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                 className={`flex items-center justify-between w-full p-3 rounded-lg transition-colors ${
-                  isSettingsPage ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                  isSettingsPage
+                    ? "bg-gray-900 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <HiOutlineCog className={`w-5 h-5 ${isSettingsPage ? 'text-white' : 'text-gray-400'}`} />
+                  <HiOutlineCog
+                    className={`w-5 h-5 ${
+                      isSettingsPage ? "text-white" : "text-gray-400"
+                    }`}
+                  />
                   <span className="font-medium">Ayarlar</span>
                 </div>
-                <HiOutlineChevronDown className={`w-4 h-4 transition-transform ${isSettingsOpen ? 'rotate-180' : ''}`} />
+                <HiOutlineChevronDown
+                  className={`w-4 h-4 transition-transform ${
+                    isSettingsOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
             ) : (
               <button
@@ -157,10 +194,16 @@ const AdminSidebar = () => {
                   }
                 }}
                 className={`flex items-center gap-2 p-3 rounded-lg transition-colors ${
-                  isSettingsPage ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                  isSettingsPage
+                    ? "bg-gray-900 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <HiOutlineCog className={`w-5 h-5 ${isSettingsPage ? 'text-white' : 'text-gray-400'}`} />
+                <HiOutlineCog
+                  className={`w-5 h-5 ${
+                    isSettingsPage ? "text-white" : "text-gray-400"
+                  }`}
+                />
               </button>
             )}
 
@@ -174,13 +217,17 @@ const AdminSidebar = () => {
                     onClick={() => isMobile && toggleSidebar()}
                     className={`flex items-center gap-2 p-3 rounded-lg transition-colors ${
                       location.pathname === item.path
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? "bg-gray-900 text-white"
+                        : "text-gray-700 hover:bg-gray-100"
                     }`}
                   >
-                    <item.icon className={`w-4 h-4 ${
-                      location.pathname === item.path ? 'text-white' : 'text-gray-400'
-                    }`} />
+                    <item.icon
+                      className={`w-4 h-4 ${
+                        location.pathname === item.path
+                          ? "text-white"
+                          : "text-gray-400"
+                      }`}
+                    />
                     <span className="font-medium text-sm">{item.name}</span>
                   </Link>
                 ))}

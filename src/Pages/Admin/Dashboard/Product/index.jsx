@@ -36,6 +36,10 @@ const ProductPage = () => {
     isActive: true,
   };
 
+  const [logo, setLogo] = useState("");
+  const [preview, setPreview] = useState("");
+
+
   const [values, setValues] = useState({
     calories: 0,
     protein: 0,
@@ -106,7 +110,7 @@ const ProductPage = () => {
     },
     {
       title: "Resim",
-      content: <Image product={product} setProduct={setProduct} />,
+      content: <Image  logo={logo} setLogo={setLogo} preview={preview} setPreview={setPreview} />,
       icon: <CiImageOn />,
     },
     {
@@ -140,6 +144,35 @@ const ProductPage = () => {
         setActiveTabIndex(index - 1);
       }
     }
+  };
+
+  const submitProduct = () => {
+    const formData = new FormData();
+    formData.append("action", "create_product");
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("langCode", localStorage.getItem("adminLang"));
+
+    formData.append("title", product.title);
+    formData.append("description", product.description);
+    formData.append('categoryId', product.categoryId);
+    formData.append("price", product.price);
+    formData.append("time", product.time);
+    formData.append("image", logo);
+    formData.append('values', JSON.stringify(values));
+    formData.append('ingredients', JSON.stringify(product.ingredients));
+    formData.append('allergens', JSON.stringify(product.allergens));
+    formData.append('isActive', 1);
+    fetch(`${import.meta.env.VITE_API_URL}Api/Product.php`, {
+      method: "POST",
+      body: formData,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 
   return (
@@ -189,7 +222,7 @@ const ProductPage = () => {
               {activeTabIndex === tabs.length - 1 && (
                 <Button
                   onClick={() => {
-                    handleAddProduct();
+                    submitProduct();
                   }}
                 >
                   <FaPlus />

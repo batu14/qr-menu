@@ -13,6 +13,7 @@ import ProductAdmin from "./Pages/Admin/Dashboard/Product";
 import GeneralAdmin from "./Pages/Admin/Dashboard/Settings/General";
 import SocialAdmin from "./Pages/Admin/Dashboard/Settings/Social";
 import LanguageAdmin from "./Pages/Admin/Dashboard/Settings/Language";
+
 const App = () => {
   return (
     <BrowserRouter>
