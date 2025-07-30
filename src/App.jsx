@@ -13,6 +13,7 @@ import ProductAdmin from "./Pages/Admin/Dashboard/Product";
 import GeneralAdmin from "./Pages/Admin/Dashboard/Settings/General";
 import SocialAdmin from "./Pages/Admin/Dashboard/Settings/Social";
 import LanguageAdmin from "./Pages/Admin/Dashboard/Settings/Language";
+import QrAdmin from "./Pages/Admin/Dashboard/Qr";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/dashboard/general" element={<GeneralAdmin />} />
           <Route path="/dashboard/social" element={<SocialAdmin />} />
           <Route path="/dashboard/language" element={<LanguageAdmin />} />
+          <Route path="/dashboard/qr" element={<QrAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>

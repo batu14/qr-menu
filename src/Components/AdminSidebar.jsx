@@ -64,7 +64,7 @@ const AdminSidebar = () => {
     { name: "Genel Ayarlar", icon: HiOutlineCog, path: "/dashboard/general" },
     { name: "Sosyal Medya", icon: HiOutlineShare, path: "/dashboard/social" },
     { name: "Dil Ayarları", icon: HiOutlineGlobe, path: "/dashboard/language" },
-    { name: "Tema & Renkler", icon: HiOutlineSun, path: "/dashboard/theme" },
+    { name: "Qr Oluştur", icon: HiOutlineSun, path: "/dashboard/qr" },
   ];
 
   const handleLogout = () => {

@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Button from "../../../../Components/Button";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaSave } from "react-icons/fa";
 import Table from "../../../../Components/Table";
 import Modal from "../../../../Components/Modal";
-import { useDispatch } from "react-redux";
-import { setCategoryId } from "../../../../Reducers/CategoryReducer";
-import { foods } from "../../../../MockData/Datas";
 import General from "./Tabs/General";
 import { CiTextAlignLeft } from "react-icons/ci";
 import Image from "./Tabs/Image";
@@ -17,12 +14,15 @@ import { IoFastFood } from "react-icons/io5";
 import { GiForkKnifeSpoon } from "react-icons/gi";
 import { MdOutlineDangerous } from "react-icons/md";
 import LangSelector from "../../../../Components/LangSelector";
+import { Toaster, toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const ProductPage = () => {
-  const dispatch = useDispatch();
+  const langCode = useSelector((state) => state.adminLang.lang);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-
+  const [isEdit, setIsEdit] = useState(false);
+  const [products, setProducts] = useState([]);
   // Initial product state
   const initialProduct = {
     title: "",
@@ -39,7 +39,6 @@ const ProductPage = () => {
   const [logo, setLogo] = useState("");
   const [preview, setPreview] = useState("");
 
-
   const [values, setValues] = useState({
     calories: 0,
     protein: 0,
@@ -49,6 +48,31 @@ const ProductPage = () => {
 
   const [product, setProduct] = useState(initialProduct);
 
+  const getProducts = () => {
+    const formData = new FormData();
+    formData.append("action", "get_products");
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("langCode", langCode);
+    fetch(`${import.meta.env.VITE_API_URL}Api/Product.php`, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 200) {
+          setProducts(data.data);
+        } else {
+          toast.error(data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, [langCode]);
   const columns = [
     { header: "id", render: (row) => row.id },
     { header: "title", render: (row) => row.title },
@@ -56,19 +80,55 @@ const ProductPage = () => {
   ];
 
   const deleteAction = (row) => {
-    console.log(row);
+    const formData = new FormData();
+    formData.append("action", "delete_product");
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("id", row.id);
+    fetch(`${import.meta.env.VITE_API_URL}Api/Product.php`, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 200) {
+          toast.success(data.message);
+          getProducts();
+        } else {
+          toast.error(data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const editAction = useCallback(
-    (row) => {
-      console.log("Edit action called with:", row);
-      setProduct(row); // Önce product'ı set et
-      setActiveTabIndex(1); // Düzenleme tabına geç
-      setIsModalOpen(true); // Sonra modal'ı aç
-      dispatch(setCategoryId(row.id));
-    },
-    [dispatch]
-  );
+  const editAction = (row) => {
+    console.log(row);
+    setIsEdit(true);
+    setProduct({
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      price: row.price,
+      time: row.time,
+      image: row.image,
+      categoryId: row.category,
+      ingredients: JSON.parse(row.ingredients),
+      allergens: JSON.parse(row.allergens),
+      isActive: row.isActive,
+    });
+    setLogo(row.image);
+    setPreview(row.image);
+    const v = JSON.parse(row.vvalues);
+    setValues({
+      calories: v.calories,
+      protein: v.protein,
+      fat: v.fat,
+      carbohydrate: v.carbohydrate,
+    });
+    setActiveTabIndex(0);
+    setIsModalOpen(true);
+  };
 
   const handleAddProduct = useCallback(() => {
     setProduct(initialProduct); // Yeni ürün için temiz state
@@ -110,7 +170,15 @@ const ProductPage = () => {
     },
     {
       title: "Resim",
-      content: <Image  logo={logo} setLogo={setLogo} preview={preview} setPreview={setPreview} />,
+      content: (
+        <Image
+          isEdit={isEdit}
+          logo={logo}
+          setLogo={setLogo}
+          preview={preview}
+          setPreview={setPreview}
+        />
+      ),
       icon: <CiImageOn />,
     },
     {
@@ -148,35 +216,51 @@ const ProductPage = () => {
 
   const submitProduct = () => {
     const formData = new FormData();
-    formData.append("action", "create_product");
+    if (isEdit) {
+      formData.append("action", "update_product");
+    } else {
+      formData.append("action", "create_product");
+    }
     formData.append("token", localStorage.getItem("token"));
     formData.append("langCode", localStorage.getItem("adminLang"));
 
+    if (isEdit) {
+      formData.append("id", product.id);
+    }
     formData.append("title", product.title);
     formData.append("description", product.description);
-    formData.append('categoryId', product.categoryId);
+    formData.append("categoryId", product.categoryId);
     formData.append("price", product.price);
     formData.append("time", product.time);
-    formData.append("image", logo);
-    formData.append('values', JSON.stringify(values));
-    formData.append('ingredients', JSON.stringify(product.ingredients));
-    formData.append('allergens', JSON.stringify(product.allergens));
-    formData.append('isActive', 1);
+    if (!logo.toString().includes("uploads/product_images")) {
+      formData.append("image", logo);
+    }
+    formData.append("values", JSON.stringify(values));
+    formData.append("ingredients", JSON.stringify(product.ingredients));
+    formData.append("allergens", JSON.stringify(product.allergens));
+    formData.append("isActive", 1);
     fetch(`${import.meta.env.VITE_API_URL}Api/Product.php`, {
       method: "POST",
       body: formData,
     })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 200) {
+          toast.success(data.message);
+          getProducts();
+          handleCloseModal();
+        } else {
+          toast.error(data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="w-full flex flex-col items-start justify-start gap-4 p-4">
+      <Toaster />
       <Modal isOpen={isModalOpen} setIsOpen={handleCloseModal}>
         <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl">
           <div className="flex flex-col gap-4 p-6 w-full">
@@ -219,7 +303,7 @@ const ProductPage = () => {
               >
                 İlerle
               </Button>
-              {activeTabIndex === tabs.length - 1 && (
+              {activeTabIndex === tabs.length - 1 && !isEdit && (
                 <Button
                   onClick={() => {
                     submitProduct();
@@ -227,6 +311,16 @@ const ProductPage = () => {
                 >
                   <FaPlus />
                   <span>Ürün Ekle</span>
+                </Button>
+              )}
+              {isEdit && activeTabIndex === tabs.length - 1 && (
+                <Button
+                  onClick={() => {
+                    submitProduct();
+                  }}
+                >
+                  <FaSave />
+                  <span>Ürünü Kaydet</span>
                 </Button>
               )}
             </div>
@@ -245,7 +339,7 @@ const ProductPage = () => {
       </div>
 
       <Table
-        data={foods}
+        data={products}
         column={columns}
         deleteAction={deleteAction}
         editAction={editAction}
