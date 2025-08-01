@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router";
 import CategorySlider from "../Components/CategorySlider";
-import { foods, categoriesData } from "../MockData/Datas";
+
 import FoodCard from "../Components/FoodCard";
 import Filter from "../Components/Filter";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,8 +19,38 @@ const Menu = () => {
   const categories = useSelector((state) => state.category.categories);
   const searchValue = useSelector((state) => state.filter.searchValue);
 
-  const [filteredFoods, setFilteredFoods] = useState(foods);
+  const [filteredFoods, setFilteredFoods] = useState();
+  const [foods, setFoods] = useState();
 
+
+  const langCode = useSelector((state) => state.lang.langCode);
+
+
+
+  const getFoods =()=>{
+    const formData = new FormData();
+    formData.append("action", "get_data");
+    formData.append("langCode", langCode);
+    fetch(`${import.meta.env.VITE_API_URL}Api/Product.php`, {
+      method: "POST",
+      body: formData,
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status == 200){
+        setFoods(data.data)
+        setFilteredFoods(data.data)
+      }else{
+        setFoods([])
+        setFilteredFoods([])
+      }
+    })
+  }
+  
+  useEffect(()=>{
+    getFoods();
+    // getTranslation();
+  },[langCode])
 
   const handleViewChange = (newView) => {
     dispatch(setView(newView));
@@ -34,12 +64,12 @@ const Menu = () => {
 
   useEffect(() => {
     if (categories) {
-      setFilteredFoods(foods.filter((food) => food.category !== categories));
+      foods && setFilteredFoods(foods.filter((food) => food.category !== categories));
     }
   }, [categories]);
 
   useEffect(() => {
-    setFilteredFoods(foods.filter((food) => food.title.toLowerCase().includes(searchValue.toLowerCase())));
+    foods && setFilteredFoods(foods.filter((food) => food.title.toLowerCase().includes(searchValue.toLowerCase())));
   }, [searchValue]);
 
   return (
@@ -61,7 +91,7 @@ const Menu = () => {
         view == "grid" ? "w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4":
         "w-full h-full flex flex-col items-start justify-start space-y-4"
       }>
-        {filteredFoods.map((food) => (
+        {filteredFoods && filteredFoods.map((food) => (
           <div
             key={food.id}
             className="w-full h-full flex flex-col items-start justify-start"

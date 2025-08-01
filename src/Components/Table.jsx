@@ -14,6 +14,7 @@ const Table = ({
   hover = true,
   bordered = false,
   compact = false,
+  contols = true,
 }) => {
   if (!data?.length) {
     return (
@@ -48,26 +49,45 @@ const Table = ({
     const isImage = () => {
       if (!contentString) return false;
 
-      const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
-      if (imageExtensions.some(ext => contentString.toLowerCase().includes(ext))) return true;
+      const imageExtensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".webp",
+        ".svg",
+        ".bmp",
+        ".ico",
+      ];
+      if (
+        imageExtensions.some((ext) => contentString.toLowerCase().includes(ext))
+      )
+        return true;
 
       const imageServices = [
-        'localhost',
-        'images.unsplash.com',
-        'cdn.pixabay.com',
-        'images.pexels.com',
-        'i.imgur.com',
-        'media.getty',
-        'cloudinary.com',
-        'amazonaws.com',
-        'googleusercontent.com',
-        'fbcdn.net',
-        'cdninstagram.com'
+        "localhost",
+        "images.unsplash.com",
+        "cdn.pixabay.com",
+        "images.pexels.com",
+        "i.imgur.com",
+        "media.getty",
+        "cloudinary.com",
+        "amazonaws.com",
+        "googleusercontent.com",
+        "fbcdn.net",
+        "cdninstagram.com",
       ];
-      if (imageServices.some(service => contentString.includes(service))) return true;
+      if (imageServices.some((service) => contentString.includes(service)))
+        return true;
 
-      const urlParams = new URLSearchParams(contentString.split('?')[1] || '');
-      return urlParams.has('format') || urlParams.has('fit') || urlParams.has('crop') || urlParams.has('w') || urlParams.has('h');
+      const urlParams = new URLSearchParams(contentString.split("?")[1] || "");
+      return (
+        urlParams.has("format") ||
+        urlParams.has("fit") ||
+        urlParams.has("crop") ||
+        urlParams.has("w") ||
+        urlParams.has("h")
+      );
     };
 
     if (isImage()) {
@@ -77,22 +97,22 @@ const Table = ({
 
       return (
         <div className="relative">
-          <img 
-            src={imageUrl} 
-            alt={col.header} 
+          <img
+            src={imageUrl}
+            alt={col.header}
             className="w-24 h-24 object-cover rounded"
             onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextElementSibling.style.display = 'block';
+              e.target.style.display = "none";
+              e.target.nextElementSibling.style.display = "block";
             }}
           />
-          <div 
+          <div
             className="hidden text-xs text-gray-500 break-all"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           >
-            <a 
-              href={imageUrl} 
-              target="_blank" 
+            <a
+              href={imageUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 underline"
             >
@@ -105,9 +125,9 @@ const Table = ({
 
     if (isLink && contentString) {
       return (
-        <a 
-          href={contentString} 
-          target="_blank" 
+        <a
+          href={contentString}
+          target="_blank"
           rel="noopener noreferrer"
           className="text-blue-600 hover:text-blue-800 underline"
         >
@@ -153,14 +173,24 @@ const Table = ({
                     </td>
                   ))}
                 <td className={tdStyles}>
-                  <div className="flex space-x-2">
-                    <Button variant="danger" size="sm" onClick={() => deleteAction(row)}>
-                      <TbTrash className="mr-1" /> Sil
-                    </Button>
-                    <Button variant="primary" size="sm" onClick={() => editAction(row)}>
-                      <TbEdit className="mr-1" /> Düzenle
-                    </Button>
-                  </div>
+                  {contols && (
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => deleteAction(row)}
+                      >
+                        <TbTrash className="mr-1" /> Sil
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => editAction(row)}
+                      >
+                        <TbEdit className="mr-1" /> Düzenle
+                      </Button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
@@ -197,10 +227,18 @@ const Table = ({
                 </div>
               ))}
             <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
-              <Button variant="danger" size="sm" onClick={() => deleteAction(row)}>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => deleteAction(row)}
+              >
                 <TbTrash className="mr-1" /> Sil
               </Button>
-              <Button variant="primary" size="sm" onClick={() => editAction(row)}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => editAction(row)}
+              >
                 <TbEdit className="mr-1" /> Düzenle
               </Button>
             </div>

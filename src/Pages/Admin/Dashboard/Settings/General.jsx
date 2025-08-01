@@ -7,6 +7,8 @@ import { FaWifi } from "react-icons/fa";
 import { FaLanguage } from "react-icons/fa";
 import Wifi from "./Tabs/Wifi";
 import ReviewTranslate from "./Tabs/ReviewTranslate";
+import MenuTranslate from "./Tabs/MenuTranslate";
+import DetailTranslate from "./Tabs/DetailTranslate";
 
 const index = () => {
   const activeTab = useSelector((state) => state.tab.activeTab);
@@ -24,11 +26,21 @@ const index = () => {
       name: "Değerlendirme çevirileri",
       icon: FaLanguage,
     },
+    {
+      name: "Menü Çevirileri",
+      icon: FaLanguage,
+    },
+    {
+      name: "Detay Çevirileri",
+      icon: FaLanguage,
+    }
   ];
 
   const content = {
     "Kablosuz Ağ": <Wifi />,
     "Değerlendirme çevirileri": <ReviewTranslate />,
+    "Menü Çevirileri": <MenuTranslate />,
+    "Detay Çevirileri": <DetailTranslate />,
   };
   return (
     <div className="w-full flex-col h-full flex items-start justify-start gap-4">

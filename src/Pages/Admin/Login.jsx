@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   HiOutlineLockClosed,
   HiOutlineEye,
@@ -33,6 +33,26 @@ const loginUser = async (formData) => {
 };
 
 
+// const isSetup =  () => {
+//   const formdata = new FormData();
+//   formdata.append("action", "setup");
+//   fetch(import.meta.env.VITE_API_URL + "Api/Dbmanager.php",{
+//     method: "POST",
+//     body: formdata
+//   }).then(res => res.json()).then(data => {
+//     if(data.status === 1){
+//       return true;
+//     }else{
+//       return false;
+//     }
+//   })
+// }
+
+
+
+
+
+
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: "", password: "" });
@@ -63,6 +83,10 @@ const Login = () => {
     }
     mutation.mutate(formData);
   };
+
+  // useEffect(() => {
+  //   isSetup()
+  // }, [])
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">

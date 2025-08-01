@@ -6,6 +6,7 @@ import filterReducer from "./Reducers/FilterReducer";
 import tabReducer from "./Reducers/TabReducer";
 import authReducer from "./Reducers/AuthReducer";
 import adminLangReducer from "./Reducers/AdminLangReducer";
+import langReducer from "./Reducers/LangReducer";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     tab: tabReducer,
     auth: authReducer,
     adminLang: adminLangReducer,
+    lang: langReducer,
   },
 });
 

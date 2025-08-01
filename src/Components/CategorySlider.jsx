@@ -1,22 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import Categoryİtem from "./Categoryİtem";
-import {categoriesData} from '../MockData/Datas'
+// import {categoriesData} from '../MockData/Datas'
 import { useDispatch } from 'react-redux'
 import { setCategories } from '../Reducers/CategoryReducer' 
 
 
 
 const CategorySlider = ({ onCategorySelect }) => {
+
+
+  const [categoriesData, setCategoriesData] = useState([]);
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]?.id);
   const dispatch = useDispatch()
   const handleCategoryClick = (categoryId,categoryTitle) => {
     setActiveCategory(categoryId);
     dispatch(setCategories(categoryTitle))
   };
+
+  const getData =()=>{
+    const formData = new FormData();
+    formData.append("action", "get_data");
+    fetch(`${import.meta.env.VITE_API_URL}Api/Category.php`, {
+      method: "POST",
+      body: formData,
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status == 200){
+        setCategoriesData(data.data)
+        // console.log(data.data)  
+      }
+    })
+
+  }
+
+  useEffect(()=>{
+    getData();
+  },[])
 
   return (
     <div className="w-full bg-gray-50/50 py-3">
@@ -60,7 +84,7 @@ const CategorySlider = ({ onCategorySelect }) => {
                 <SwiperSlide key={category.id} className="py-1">
                   <Categoryİtem
 
-                    image={category.image}
+                    image={import.meta.env.VITE_API_URL+'Api/' + category.image}
                     title={category.title}
                     isActive={activeCategory === category.id}
                     onClick={() => handleCategoryClick(category.id,category.title)}

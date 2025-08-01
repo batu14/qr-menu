@@ -16,7 +16,7 @@ const Categoryİtem = ({ image, title, isActive, onClick }) => {
       />
       
       <div className="relative flex flex-col items-center p-1.5">
-        <div className={`w-[52px] h-[52px] rounded-xl overflow-hidden transition-transform duration-300 
+        <div className={`w-20 aspect-square rounded-xl overflow-hidden transition-transform duration-300 
           ${isActive ? 'ring-1 ring-gray-900' : 'group-hover:ring-1 group-hover:ring-gray-200'}`}>
           <img 
             src={image} 

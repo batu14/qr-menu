@@ -2,35 +2,29 @@ import React, { useState } from "react";
 import InputComp from "../../../../../Components/InputComp";
 import Button from "../../../../../Components/Button";
 import { FaSave } from "react-icons/fa";
-import { toast ,Toaster} from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-const ReviewTranslate = () => {
+const MenuTranslate = () => {
   const adminLang = useSelector((state) => state.adminLang.lang);
   const [reviewTranslate, setReviewTranslate] = useState({
     title: "",
-    subtitle: "",
-    name: "",
-    surname: "",
-    mail: "",
-    comment: "",
-    button: "",
-    security: "",
+    language: "",
+    wifi: "",
+    rate:"",
+    social:"",
   });
 
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append("langCode", adminLang);
-    formData.append("action", "rewiew_translation");
+    formData.append("action", "menu_translation");
     formData.append("token", localStorage.getItem("token"));
     formData.append("title", reviewTranslate.title);
-    formData.append("subtitle", reviewTranslate.subtitle);
-    formData.append("name", reviewTranslate.name);
-    formData.append("surname", reviewTranslate.surname);
-    formData.append("mail", reviewTranslate.mail);
-    formData.append("comment", reviewTranslate.comment);
-    formData.append("button", reviewTranslate.button);
-    formData.append("security", reviewTranslate.security);
+    formData.append("language", reviewTranslate.language);
+    formData.append("wifi", reviewTranslate.wifi);
+    formData.append("rate", reviewTranslate.rate);
+    formData.append("social", reviewTranslate.social);
     fetch(`${import.meta.env.VITE_API_URL}Api/General.php`, {
       method: "POST",
       body: formData,
@@ -49,9 +43,8 @@ const ReviewTranslate = () => {
   };
 
   useEffect(() => {
-
     const formData = new FormData();
-    formData.append("action", "get_review_translation");
+    formData.append("action", "get_menu_translation");
     formData.append("token", localStorage.getItem("token"));
     formData.append("langCode", adminLang);
     fetch(`${import.meta.env.VITE_API_URL}Api/General.php`, {
@@ -69,7 +62,6 @@ const ReviewTranslate = () => {
       });
   }, [adminLang]);
 
-
   return (
     <div className="w-full  flex flex-col items-start justify-start gap-2">
       <div className="w-full flex flex-col items-start justify-start gap-2 md:grid md:grid-cols-2">
@@ -81,63 +73,36 @@ const ReviewTranslate = () => {
           }
         />
         <InputComp
-          label="Alt Başlık"
-          value={reviewTranslate.subtitle}
+          label="Dil"
+          value={reviewTranslate.language}
           onChange={(e) =>
-            setReviewTranslate({ ...reviewTranslate, subtitle: e.target.value })
+            setReviewTranslate({ ...reviewTranslate, language: e.target.value })
           }
         />
         <InputComp
-          label="Ad"
-          value={reviewTranslate.name}
+          label="Wifi"
+          value={reviewTranslate.wifi}
           onChange={(e) =>
-            setReviewTranslate({ ...reviewTranslate, name: e.target.value })
+            setReviewTranslate({ ...reviewTranslate, wifi: e.target.value })
           }
         />
         <InputComp
-          label="Soyad"
-          value={reviewTranslate.surname}
+          label="Değerlendirme"
+          value={reviewTranslate.rate}
           onChange={(e) =>
-            setReviewTranslate({ ...reviewTranslate, surname: e.target.value })
+            setReviewTranslate({ ...reviewTranslate, rate: e.target.value })
           }
         />
         <InputComp
-          label="Email"
-          value={reviewTranslate.mail}
+          label="Sosyal Medya"
+          value={reviewTranslate.social}
           onChange={(e) =>
-            setReviewTranslate({ ...reviewTranslate, mail: e.target.value })
-          }
-        />
-        <InputComp
-          label="Yorum"
-          value={reviewTranslate.comment}
-          onChange={(e) =>
-            setReviewTranslate({ ...reviewTranslate, comment: e.target.value })
-          }
-        />
-        <InputComp
-          label="Buton Metni"
-          value={reviewTranslate.button}
-          onChange={(e) =>
-            setReviewTranslate({
-              ...reviewTranslate,
-              button: e.target.value,
-            })
-          }
-        />
-        <InputComp
-          label="Gizlilik Politikası"
-          value={reviewTranslate.security}
-          onChange={(e) =>
-            setReviewTranslate({
-              ...reviewTranslate,
-              security: e.target.value,
-            })
+            setReviewTranslate({ ...reviewTranslate, social: e.target.value })
           }
         />
       </div>
       <div className="w-full flex items-center justify-end gap-2">
-          <Button variant="primary" onClick={handleSubmit}>
+        <Button variant="primary" onClick={handleSubmit}>
           <FaSave />
           <span>Kaydet</span>
         </Button>
@@ -147,4 +112,4 @@ const ReviewTranslate = () => {
   );
 };
 
-export default ReviewTranslate;
+export default MenuTranslate;

@@ -1,8 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { HiOutlineStar, HiStar, HiArrowLeft } from "react-icons/hi"
 import { Link } from 'react-router'
+import { useSelector } from 'react-redux';
+import { Toaster,toast } from 'react-hot-toast';
 
 const Rewiev = () => {
+  const langCode = useSelector((state) => state.lang.langCode);
+
+
+  const [translation, setTranslation] = useState(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -12,6 +18,27 @@ const Rewiev = () => {
   });
   const [hoverRating, setHoverRating] = useState(0);
   const [errors, setErrors] = useState({});
+
+
+  useEffect(()=>{
+
+    const formdata = new FormData();
+    formdata.append("action","get_review_translation");
+    formdata.append("langCode",langCode);
+    fetch(`${import.meta.env.VITE_API_URL}Api/General.php`,{
+      method:"POST",
+      body:formdata
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status == 200){
+        console.log(data.data[0])
+        setTranslation(data.data[0]);
+      }
+    })
+
+
+  },[])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +54,32 @@ const Rewiev = () => {
     if (!formData.rating) newErrors.rating = 'Lütfen puan verin';
 
     if (Object.keys(newErrors).length === 0) {
-      console.log('Form gönderildi:', formData);
+      const formdata = new FormData();
+      formdata.append("action","add_review");
+      formdata.append("name",formData.firstName);
+      formdata.append("surname",formData.lastName);
+      formdata.append("mail",formData.email);
+      formdata.append("comment",formData.comment);
+      formdata.append("rating",formData.rating);
+      fetch(`${import.meta.env.VITE_API_URL}Api/General.php`,{
+        method:"POST",
+        body:formdata
+      })
+      .then(res=>res.json())
+      .then(data=>{
+        if(data.status == 200){
+          toast.success(data.message);
+          setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            rating: 0,
+            comment: ''
+          });
+        }else{
+          toast.error(data.message);
+        }
+      })
     } else {
       setErrors(newErrors);
     }
@@ -35,6 +87,7 @@ const Rewiev = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Toaster/>
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
@@ -43,7 +96,7 @@ const Rewiev = () => {
             className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <HiArrowLeft className="w-5 h-5" />
-            <span>Menüye Dön</span>
+            <span></span>
           </Link>
         </div>
       </div>
@@ -53,8 +106,12 @@ const Rewiev = () => {
         <div className="bg-white rounded-2xl shadow-sm p-6">
           {/* Başlık */}
           <div className="text-center space-y-2 mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Değerlendirmenizi Paylaşın</h1>
-            <p className="text-gray-600">Deneyiminiz bizim için değerli</p>
+            <h1 className="text-2xl font-bold text-gray-900">{
+              translation && translation.title ? translation.title : "Değerlendirmenizi Paylaşın"
+            }</h1>
+            <p className="text-gray-600">{
+              translation && translation.subtitle ? translation.subtitle : "Deneyiminiz bizim için değerli"
+            }</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -90,7 +147,9 @@ const Rewiev = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  İsim
+                  {
+                    translation && translation.name ? translation.name : "İsim"
+                  }
                 </label>
                 <input
                   type="text"
@@ -99,7 +158,9 @@ const Rewiev = () => {
                   className={`w-full px-4 py-3 border ${
                     errors.firstName ? 'border-red-300' : 'border-gray-200'
                   } rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200`}
-                  placeholder="İsminizi girin"
+                  placeholder={
+                    translation && translation.name ? translation.name : "İsminizi girin"
+                  }
                 />
                 {errors.firstName && (
                   <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
@@ -108,7 +169,9 @@ const Rewiev = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Soyisim
+                  {
+                    translation && translation.surname ? translation.surname : "Soyisim"
+                  }
                 </label>
                 <input
                   type="text"
@@ -117,7 +180,9 @@ const Rewiev = () => {
                   className={`w-full px-4 py-3 border ${
                     errors.lastName ? 'border-red-300' : 'border-gray-200'
                   } rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200`}
-                  placeholder="Soyisminizi girin"
+                  placeholder={
+                    translation && translation.surname ? translation.surname : "Soyisminizi girin"
+                  }
                 />
                 {errors.lastName && (
                   <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
@@ -127,7 +192,9 @@ const Rewiev = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                E-posta
+                {
+                  translation && translation.mail ? translation.mail : "E-posta"
+                }
               </label>
               <input
                 type="email"
@@ -136,7 +203,9 @@ const Rewiev = () => {
                 className={`w-full px-4 py-3 border ${
                   errors.email ? 'border-red-300' : 'border-gray-200'
                 } rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200`}
-                placeholder="E-posta adresinizi girin"
+                placeholder={
+                  translation && translation.mail ? translation.mail : "E-posta adresinizi girin"
+                }
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -145,14 +214,18 @@ const Rewiev = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Yorumunuz (Opsiyonel)
+                {
+                  translation && translation.comment ? translation.comment : "Yorumunuz (Opsiyonel)"
+                }
               </label>
               <textarea
                 value={formData.comment}
                 onChange={(e) => setFormData({...formData, comment: e.target.value})}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200"
-                placeholder="Deneyiminizi paylaşın..."
+                placeholder={
+                  translation && translation.comment ? translation.comment : "Deneyiminizi paylaşın..."
+                }
               />
             </div>
 
@@ -160,12 +233,16 @@ const Rewiev = () => {
               type="submit"
               className="w-full py-4 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all active:scale-[0.99] text-sm"
             >
-              Değerlendirmeyi Gönder
+                {
+                  translation && translation.button ? translation.button : "Değerlendirmeyi Gönder"
+                }
             </button>
           </form>
 
           <p className="text-xs text-gray-500 text-center mt-6">
-            Bilgileriniz gizli tutulacak ve yalnızca hizmet kalitemizi artırmak için kullanılacaktır.
+            {
+              translation && translation.security ? translation.security : "Bilgileriniz gizli tutulacak ve yalnızca hizmet kalitemizi artırmak için kullanılacaktır."
+            }
           </p>
         </div>
       </div>

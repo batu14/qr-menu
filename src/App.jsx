@@ -14,6 +14,7 @@ import GeneralAdmin from "./Pages/Admin/Dashboard/Settings/General";
 import SocialAdmin from "./Pages/Admin/Dashboard/Settings/Social";
 import LanguageAdmin from "./Pages/Admin/Dashboard/Settings/Language";
 import QrAdmin from "./Pages/Admin/Dashboard/Qr";
+import ReviewAdmin from "./Pages/Admin/Dashboard/Review";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/dashboard/social" element={<SocialAdmin />} />
           <Route path="/dashboard/language" element={<LanguageAdmin />} />
           <Route path="/dashboard/qr" element={<QrAdmin />} />
+          <Route path="/dashboard/review" element={<ReviewAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>

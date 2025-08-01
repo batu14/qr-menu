@@ -19,6 +19,7 @@ const foods = [
     },
     allergens: ["Susam"],
     tags: ["Vegan", "Meze", "Glutensiz"],
+    langCode: "tr",
   },
   {
     id: 2,
@@ -39,6 +40,7 @@ const foods = [
     },
     allergens: [],
     tags: ["Acılı", "Vegan", "Meze"],
+    langCode: "tr",
   },
   {
     id: 3,
@@ -59,6 +61,7 @@ const foods = [
     },
     allergens: ["Süt ürünleri", "Yumurta", "Gluten"],
     tags: ["Atıştırmalık", "Çocuklar İçin Uygun"],
+    langCode: "tr",
   },
   {
     id: 4,
@@ -79,6 +82,7 @@ const foods = [
     },
     allergens: [],
     tags: ["Vegan", "Atıştırmalık", "Glutensiz"],
+    langCode: "tr",
   },
 
   // Ana yemekler
@@ -101,6 +105,7 @@ const foods = [
     },
     allergens: ["Gluten", "Süt ürünleri"],
     tags: ["Popüler", "Fast Food", "Doyurucu"],
+    langCode: "tr",
   },
   {
     id: 6,
@@ -121,6 +126,7 @@ const foods = [
     },
     allergens: ["Gluten", "Süt ürünleri"],
     tags: ["Paylaşılabilir", "Bol Malzeme", "Pizza"],
+    langCode: "tr",
   },
   {
     id: 7,
@@ -141,6 +147,7 @@ const foods = [
     },
     allergens: [],
     tags: ["Fit Menü", "Protein Açısından Zengin"],
+    langCode: "tr",
   },
   {
     id: 8,
@@ -161,6 +168,7 @@ const foods = [
     },
     allergens: ["Gluten", "Yumurta"],
     tags: ["Geleneksel", "Ev Usulü", "Doyurucu"],
+    langCode: "tr",
   },
 
   // Devamını istiyorsan, Salatalar, Tatlılar ve İçecekler kısmını da bu detayda dönüştürebilirim.

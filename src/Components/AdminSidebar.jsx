@@ -13,6 +13,7 @@ import {
   HiOutlineGlobe,
   HiOutlineSun,
   HiOutlineShare,
+  HiOutlineStar,
 } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../Reducers/AuthReducer";
@@ -58,6 +59,11 @@ const AdminSidebar = () => {
       icon: HiOutlineShoppingCart,
       path: "/dashboard/product",
     },
+    {
+      name: "Değerlendirmeler",
+      icon: HiOutlineStar,
+      path: "/dashboard/review",
+    }
   ];
 
   const settingsItems = [
