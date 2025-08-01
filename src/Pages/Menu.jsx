@@ -64,8 +64,10 @@ const Menu = () => {
 
   useEffect(() => {
     if (categories) {
-      foods && setFilteredFoods(foods.filter((food) => food.category !== categories));
+      setFilteredFoods(foods.filter((food) => food.category === categories));
     }
+    
+    console.log(categories)
   }, [categories]);
 
   useEffect(() => {

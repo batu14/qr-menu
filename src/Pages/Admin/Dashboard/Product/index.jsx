@@ -249,6 +249,16 @@ const ProductPage = () => {
           toast.success(data.message);
           getProducts();
           handleCloseModal();
+          setProduct(initialProduct);
+          setLogo("");
+          setPreview("");
+          setValues({
+            calories: 0,
+            protein: 0,
+            fat: 0,
+            carbohydrate: 0,
+          });
+          setActiveTabIndex(0);
         } else {
           toast.error(data.message);
         }

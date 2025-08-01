@@ -47,7 +47,7 @@ const General = ({ product, setProduct }) => {
       <select className="w-full border border-gray-300 p-2 rounded-md" onChange={(e)=>setProduct((prev)=>({...prev,categoryId:e.target.value}))}>
         <option value="">Kategori seçiniz</option>
         {categories.map((category)=>(
-          <option key={category.id} value={category.id}>{category.title}</option>
+          <option key={category.id} value={category.title}>{category.title}</option>
         ))}
       </select>
 

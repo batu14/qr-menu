@@ -32,7 +32,7 @@ const FoodCard = ({ image, title, description, price, ingredients, id }) => {
                   {title}
                 </h3>
                 <div className="flex-shrink-0 bg-gray-50 px-3 py-1 rounded-lg">
-                  <span className="text-lg font-bold text-gray-900 whitespace-nowrap">
+                  <span className="text-lg flex items-center gap-1 font-bold text-gray-900 whitespace-nowrap">
                     {typeof price === "string" ? `${price}` : price}
                     <p>₺</p>
                   </span>
@@ -115,8 +115,9 @@ const FoodCard = ({ image, title, description, price, ingredients, id }) => {
             </p>
           </div>
           <div className="flex-shrink-0">
-            <span className="text-lg font-semibold text-gray-900">
-              {typeof price === "number" ? `${price.toFixed(2)}₺` : price}
+            <span className="text-lg flex items-center gap-1 font-semibold text-gray-900">
+              {typeof price === "number" ? `${price.toFixed(2)}` : price}
+              <p>₺</p>
             </span>
           </div>
         </div>

@@ -73,7 +73,7 @@ const FoodDetail = () => {
       </div>
 
       <div className="w-full h-full flex flex-col items-start justify-start">
-        <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+        <div className="bg-white rounded-xl w-full overflow-hidden shadow-sm">
           {/* Resim */}
           <div className="aspect-[4/3]  sm:aspect-[16/9] overflow-hidden">
             <img
@@ -169,7 +169,7 @@ const FoodDetail = () => {
                     .map((ingredient, index) => (
                       <span
                         key={index}
-                        className="px-2 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 text-center"
+                        className="px-2 py-2 capitalize bg-white border border-gray-200 rounded-lg text-sm text-gray-700 text-center"
                       >
                         {ingredient}
                       </span>
@@ -191,7 +191,7 @@ const FoodDetail = () => {
                       ? translation.allergens
                       : "Alerjen Uyarısı"}
                   </h4>
-                  <p className="text-sm text-yellow-700">
+                  <p className="text-sm capitalize text-yellow-700">
                     {food &&
                       food.allergens
                         .replaceAll("[", "")
